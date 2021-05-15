@@ -1,2 +1,2 @@
 # raspi-gpio2websocket
-GPIO Mapping to WebSocket
+Raspberry GPIO Mapping to WebSocket
