@@ -22,6 +22,8 @@ export class TestCommand implements ICommand {
 
 
         this.mfrc522 = new Mfrc522(this.softSPI).setResetPin(22);
+
+        this.reset();
     }
 
     async run(args: any): Promise<boolean> {
@@ -44,14 +46,14 @@ export class TestCommand implements ICommand {
     }
 
     runSync(): boolean {
+
         setInterval(() => {
             //# reset card
-            this.reset();
+            //this.reset();
 
             //# Scan for cards
             let response = this.mfrc522.findCard();
             console.log("---------------------");
-            console.log(this.mfrc522.readRegister(CMD.RFCfgReg));
             if (!response.status) {
                 console.log("No Card", response);
                 return;
@@ -76,7 +78,7 @@ export class TestCommand implements ICommand {
             );
 
             //# Stop
-            this.mfrc522.stopCrypto();
+            //this.mfrc522.stopCrypto();
         }, 1000);
 
         return false;

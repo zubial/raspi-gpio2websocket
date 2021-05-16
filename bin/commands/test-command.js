@@ -49,6 +49,7 @@ var TestCommand = /** @class */ (function () {
             client: 24 // pin number of CS
         });
         this.mfrc522 = new Mfrc522(this.softSPI).setResetPin(22);
+        this.reset();
     }
     TestCommand.prototype.run = function (args) {
         return __awaiter(this, void 0, void 0, function () {
@@ -73,11 +74,10 @@ var TestCommand = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             //# reset card
-            _this.reset();
+            //this.reset();
             //# Scan for cards
             var response = _this.mfrc522.findCard();
             console.log("---------------------");
-            console.log(_this.mfrc522.readRegister(CMD.RFCfgReg));
             if (!response.status) {
                 console.log("No Card", response);
                 return;
@@ -93,7 +93,7 @@ var TestCommand = /** @class */ (function () {
             var uid = response.data;
             console.log("Card read UID: %s %s %s %s", uid[0].toString(16), uid[1].toString(16), uid[2].toString(16), uid[3].toString(16));
             //# Stop
-            _this.mfrc522.stopCrypto();
+            //this.mfrc522.stopCrypto();
         }, 1000);
         return false;
     };
