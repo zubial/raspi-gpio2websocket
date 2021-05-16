@@ -31,9 +31,6 @@ export class TestCommand implements ICommand {
     }
 
     runSync(): boolean {
-
-        console.log(this.mfrc522);
-
         setInterval(() => {
             //# reset card
             this.mfrc522.reset();
@@ -41,7 +38,7 @@ export class TestCommand implements ICommand {
             //# Scan for cards
             let response = this.mfrc522.findCard();
             console.log("---------------------");
-            if (response.bitSize == 0) {
+            if (!response.status) {
                 console.log("No Card", response);
                 return;
             }
@@ -64,25 +61,9 @@ export class TestCommand implements ICommand {
                 uid[3].toString(16)
             );
 
-            //# Select the scanned card
-            const memoryCapacity = this.mfrc522.selectCard(uid);
-            console.log("Card Memory Capacity: " + memoryCapacity);
-
-            //# This is the default key for authentication
-            const key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
-
-            //# Authenticate on Block 8 with key and uid
-            if (!this.mfrc522.authenticate(8, key, uid)) {
-                console.log("Authentication Error");
-                return;
-            }
-
-            //# Dump Block 8
-            console.log("Block: 8 Data: " + this.mfrc522.getDataForBlock(8));
-
             //# Stop
             this.mfrc522.stopCrypto();
-        }, 500);
+        }, 1000);
 
         return false;
     }
