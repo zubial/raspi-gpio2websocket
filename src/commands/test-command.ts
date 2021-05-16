@@ -20,10 +20,7 @@ export class TestCommand implements ICommand {
             client: 24 // pin number of CS
         });
 
-
         this.mfrc522 = new Mfrc522(this.softSPI).setResetPin(22);
-
-        this.reset();
     }
 
     async run(args: any): Promise<boolean> {
@@ -49,7 +46,7 @@ export class TestCommand implements ICommand {
 
         setInterval(() => {
             //# reset card
-            //this.reset();
+            this.reset();
 
             //# Scan for cards
             let response = this.mfrc522.findCard();

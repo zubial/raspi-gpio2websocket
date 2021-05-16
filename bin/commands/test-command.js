@@ -49,7 +49,6 @@ var TestCommand = /** @class */ (function () {
             client: 24 // pin number of CS
         });
         this.mfrc522 = new Mfrc522(this.softSPI).setResetPin(22);
-        this.reset();
     }
     TestCommand.prototype.run = function (args) {
         return __awaiter(this, void 0, void 0, function () {
@@ -74,7 +73,7 @@ var TestCommand = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             //# reset card
-            //this.reset();
+            _this.reset();
             //# Scan for cards
             var response = _this.mfrc522.findCard();
             console.log("---------------------");
