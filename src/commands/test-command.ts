@@ -40,9 +40,9 @@ export class TestCommand implements ICommand {
 
             //# Scan for cards
             let response = this.mfrc522.findCard();
-            console.log(response);
+            console.log("---------------------");
             if (!response.status) {
-                console.log("No Card");
+                console.log("No Card", response);
                 return;
             }
             console.log("Card detected, CardType: " + response.bitSize);

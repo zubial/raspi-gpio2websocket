@@ -65,9 +65,9 @@ var TestCommand = /** @class */ (function () {
             _this.mfrc522.reset();
             //# Scan for cards
             var response = _this.mfrc522.findCard();
-            console.log(response);
+            console.log("---------------------");
             if (!response.status) {
-                console.log("No Card");
+                console.log("No Card", response);
                 return;
             }
             console.log("Card detected, CardType: " + response.bitSize);
