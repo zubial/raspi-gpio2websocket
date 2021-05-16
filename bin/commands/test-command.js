@@ -44,6 +44,7 @@ var TestCommand = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 this.args = args;
+                console.log('Test');
                 return [2 /*return*/, false];
             });
         });

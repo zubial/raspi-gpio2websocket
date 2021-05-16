@@ -11,6 +11,8 @@ export class TestCommand implements ICommand {
     async run(args: any): Promise<boolean> {
         this.args = args;
 
+        console.log('Test');
+
         return false;
     }
 }
