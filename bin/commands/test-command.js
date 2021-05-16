@@ -66,7 +66,7 @@ var TestCommand = /** @class */ (function () {
         mfrc522.writeRegister(CMD.TReloadRegH, 0);
         mfrc522.writeRegister(CMD.TxAutoReg, 0x40); // Default 0x00. Force a 100 % ASK modulation independent of the ModGsPReg register setting
         mfrc522.writeRegister(CMD.ModeReg, 0x3d); // Default 0x3F. Set the preset value for the CRC coprocessor for the CalcCRC command to 0x6363 (ISO 14443-3 part 6.2.4)
-        mfrc522.writeRegister(CMD.RFCfgReg, (0x07 << 4));
+        mfrc522.writeRegister(CMD.RFCfgReg, 0x7F);
         console.log(mfrc522.readRegister(CMD.RFCfgReg));
         mfrc522.antennaOn(); // Enable the antenna driver pins TX1 and TX2 (they were disabled by the reset)
     };
