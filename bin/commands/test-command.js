@@ -38,17 +38,8 @@ var TestCommand = /** @class */ (function () {
             //# Select the scanned card
             var memoryCapacity = _this.mfrc522.selectCard(uid);
             console.log("Card Memory Capacity: " + memoryCapacity);
-            //# This is the default key for authentication
-            var key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
-            //# Authenticate on Block 8 with key and uid
-            if (!_this.mfrc522.authenticate(8, key, uid)) {
-                console.log("Authentication Error");
-                return;
-            }
             //# Dump Block 8
             console.log("Block: 8 Data: " + _this.mfrc522.getDataForBlock(8));
-            //# Stop
-            _this.mfrc522.stopCrypto();
         }, 1000);
         return false;
     };

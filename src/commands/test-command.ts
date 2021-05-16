@@ -56,20 +56,8 @@ export class TestCommand implements ICommand {
             const memoryCapacity = this.mfrc522.selectCard(uid);
             console.log("Card Memory Capacity: " + memoryCapacity);
 
-            //# This is the default key for authentication
-            const key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
-
-            //# Authenticate on Block 8 with key and uid
-            if (!this.mfrc522.authenticate(8, key, uid)) {
-                console.log("Authentication Error");
-                return;
-            }
-
             //# Dump Block 8
             console.log("Block: 8 Data: " + this.mfrc522.getDataForBlock(8));
-
-            //# Stop
-            this.mfrc522.stopCrypto();
 
         }, 1000);
 
