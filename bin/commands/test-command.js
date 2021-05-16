@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestCommand = void 0;
 var Mfrc522 = require("mfrc522-rpi");
+var CMD = require("mfrc522-rpi/commands");
 var SoftSPI = require("rpi-softspi");
 var TestCommand = /** @class */ (function () {
     function TestCommand() {
@@ -57,11 +58,22 @@ var TestCommand = /** @class */ (function () {
             });
         });
     };
+    TestCommand.prototype.reset = function (mfrc522) {
+        mfrc522.writeRegister(CMD.CommandReg, CMD.PCD_RESETPHASE); // reset chip
+        mfrc522.writeRegister(CMD.TModeReg, 0x8d); // TAuto=1; timer starts automatically at the end of the transmission in all communication modes at all speeds
+        mfrc522.writeRegister(CMD.TPrescalerReg, 0x3e); // TPreScaler = TModeReg[3..0]:TPrescalerReg, ie 0x0A9 = 169 => f_timer=40kHz, ie a timer period of 25μs.
+        mfrc522.writeRegister(CMD.TReloadRegL, 30); // Reload timer with 0x3E8 = 1000, ie 25ms before timeout.
+        mfrc522.writeRegister(CMD.TReloadRegH, 0);
+        mfrc522.writeRegister(CMD.TxAutoReg, 0x40); // Default 0x00. Force a 100 % ASK modulation independent of the ModGsPReg register setting
+        mfrc522.writeRegister(CMD.ModeReg, 0x3d); // Default 0x3F. Set the preset value for the CRC coprocessor for the CalcCRC command to 0x6363 (ISO 14443-3 part 6.2.4)
+        mfrc522.writeRegister(CMD.RFCfgReg, (0x07 << 4));
+        mfrc522.antennaOn(); // Enable the antenna driver pins TX1 and TX2 (they were disabled by the reset)
+    };
     TestCommand.prototype.runSync = function () {
         var _this = this;
         setInterval(function () {
             //# reset card
-            _this.mfrc522.reset();
+            _this.reset(_this.mfrc522);
             //# Scan for cards
             var response = _this.mfrc522.findCard();
             console.log("---------------------");
