@@ -35,6 +35,9 @@ var TestCommand = /** @class */ (function () {
             }
             var uid = response.data;
             console.log("Card read UID: %s %s %s %s", uid[0].toString(16), uid[1].toString(16), uid[2].toString(16), uid[3].toString(16));
+            //# Select the scanned card
+            var memoryCapacity = _this.mfrc522.selectCard(uid);
+            console.log("Card Memory Capacity: " + memoryCapacity);
             //# This is the default key for authentication
             var key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
             //# Authenticate on Block 8 with key and uid

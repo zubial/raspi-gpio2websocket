@@ -52,6 +52,10 @@ export class TestCommand implements ICommand {
                 uid[3].toString(16)
             );
 
+            //# Select the scanned card
+            const memoryCapacity = this.mfrc522.selectCard(uid);
+            console.log("Card Memory Capacity: " + memoryCapacity);
+
             //# This is the default key for authentication
             const key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
 
