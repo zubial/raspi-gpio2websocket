@@ -37,14 +37,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestCommand = void 0;
+var Mfrc522 = require("mfrc522-rpi");
+var SoftSPI = require("rpi-softspi");
 var TestCommand = /** @class */ (function () {
     function TestCommand() {
+        this.softSPI = new SoftSPI({
+            clock: 23,
+            mosi: 19,
+            miso: 21,
+            client: 24 // pin number of CS
+        });
+        this.mfrc522 = new Mfrc522(this.softSPI).setResetPin(22);
     }
     TestCommand.prototype.run = function (args) {
         return __awaiter(this, void 0, void 0, function () {
+            var response, uid, memoryCapacity, key;
             return __generator(this, function (_a) {
                 this.args = args;
-                console.log('Test');
+                //# reset card
+                this.mfrc522.reset();
+                response = this.mfrc522.findCard();
+                if (!response.status) {
+                    console.log("No Card");
+                    return [2 /*return*/];
+                }
+                console.log("Card detected, CardType: " + response.bitSize);
+                //# Get the UID of the card
+                response = this.mfrc522.getUid();
+                if (!response.status) {
+                    console.log("UID Scan Error");
+                    return [2 /*return*/];
+                }
+                uid = response.data;
+                console.log("Card read UID: %s %s %s %s", uid[0].toString(16), uid[1].toString(16), uid[2].toString(16), uid[3].toString(16));
+                memoryCapacity = this.mfrc522.selectCard(uid);
+                console.log("Card Memory Capacity: " + memoryCapacity);
+                key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
+                //# Authenticate on Block 8 with key and uid
+                if (!this.mfrc522.authenticate(8, key, uid)) {
+                    console.log("Authentication Error");
+                    return [2 /*return*/];
+                }
+                //# Dump Block 8
+                console.log("Block: 8 Data: " + this.mfrc522.getDataForBlock(8));
+                //# Stop
+                this.mfrc522.stopCrypto();
                 return [2 /*return*/, false];
             });
         });
