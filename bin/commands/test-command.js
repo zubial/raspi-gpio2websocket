@@ -51,40 +51,51 @@ var TestCommand = /** @class */ (function () {
     }
     TestCommand.prototype.run = function (args) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, uid, memoryCapacity, key;
             return __generator(this, function (_a) {
                 this.args = args;
-                //# reset card
-                this.mfrc522.reset();
-                response = this.mfrc522.findCard();
-                if (!response.status) {
-                    console.log("No Card");
-                    return [2 /*return*/];
-                }
-                console.log("Card detected, CardType: " + response.bitSize);
-                //# Get the UID of the card
-                response = this.mfrc522.getUid();
-                if (!response.status) {
-                    console.log("UID Scan Error");
-                    return [2 /*return*/];
-                }
-                uid = response.data;
-                console.log("Card read UID: %s %s %s %s", uid[0].toString(16), uid[1].toString(16), uid[2].toString(16), uid[3].toString(16));
-                memoryCapacity = this.mfrc522.selectCard(uid);
-                console.log("Card Memory Capacity: " + memoryCapacity);
-                key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
-                //# Authenticate on Block 8 with key and uid
-                if (!this.mfrc522.authenticate(8, key, uid)) {
-                    console.log("Authentication Error");
-                    return [2 /*return*/];
-                }
-                //# Dump Block 8
-                console.log("Block: 8 Data: " + this.mfrc522.getDataForBlock(8));
-                //# Stop
-                this.mfrc522.stopCrypto();
                 return [2 /*return*/, false];
             });
         });
+    };
+    TestCommand.prototype.runSync = function () {
+        var _this = this;
+        console.log(this.mfrc522);
+        setInterval(function () {
+            //# reset card
+            _this.mfrc522.reset();
+            //# Scan for cards
+            var response = _this.mfrc522.findCard();
+            console.log(response);
+            if (!response.status) {
+                console.log("No Card");
+                return;
+            }
+            console.log("Card detected, CardType: " + response.bitSize);
+            //# Get the UID of the card
+            response = _this.mfrc522.getUid();
+            if (!response.status) {
+                console.log("UID Scan Error");
+                return;
+            }
+            //# If we have the UID, continue
+            var uid = response.data;
+            console.log("Card read UID: %s %s %s %s", uid[0].toString(16), uid[1].toString(16), uid[2].toString(16), uid[3].toString(16));
+            //# Select the scanned card
+            var memoryCapacity = _this.mfrc522.selectCard(uid);
+            console.log("Card Memory Capacity: " + memoryCapacity);
+            //# This is the default key for authentication
+            var key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
+            //# Authenticate on Block 8 with key and uid
+            if (!_this.mfrc522.authenticate(8, key, uid)) {
+                console.log("Authentication Error");
+                return;
+            }
+            //# Dump Block 8
+            console.log("Block: 8 Data: " + _this.mfrc522.getDataForBlock(8));
+            //# Stop
+            _this.mfrc522.stopCrypto();
+        }, 500);
+        return false;
     };
     return TestCommand;
 }());

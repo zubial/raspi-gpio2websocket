@@ -21,57 +21,67 @@ export class TestCommand implements ICommand {
 
 
         this.mfrc522 = new Mfrc522(this.softSPI).setResetPin(22);
-
     }
 
     async run(args: any): Promise<boolean> {
         this.args = args;
 
-        //# reset card
-        this.mfrc522.reset();
 
-        //# Scan for cards
-        let response = this.mfrc522.findCard();
-        if (!response.status) {
-            console.log("No Card");
-            return;
-        }
-        console.log("Card detected, CardType: " + response.bitSize);
+        return false;
+    }
 
-        //# Get the UID of the card
-        response = this.mfrc522.getUid();
-        if (!response.status) {
-            console.log("UID Scan Error");
-            return;
-        }
-        //# If we have the UID, continue
-        const uid = response.data;
-        console.log(
-            "Card read UID: %s %s %s %s",
-            uid[0].toString(16),
-            uid[1].toString(16),
-            uid[2].toString(16),
-            uid[3].toString(16)
-        );
+    runSync(): boolean {
 
-        //# Select the scanned card
-        const memoryCapacity = this.mfrc522.selectCard(uid);
-        console.log("Card Memory Capacity: " + memoryCapacity);
+        console.log(this.mfrc522);
 
-        //# This is the default key for authentication
-        const key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
+        setInterval(() => {
+            //# reset card
+            this.mfrc522.reset();
 
-        //# Authenticate on Block 8 with key and uid
-        if (!this.mfrc522.authenticate(8, key, uid)) {
-            console.log("Authentication Error");
-            return;
-        }
+            //# Scan for cards
+            let response = this.mfrc522.findCard();
+            console.log(response);
+            if (!response.status) {
+                console.log("No Card");
+                return;
+            }
+            console.log("Card detected, CardType: " + response.bitSize);
 
-        //# Dump Block 8
-        console.log("Block: 8 Data: " + this.mfrc522.getDataForBlock(8));
+            //# Get the UID of the card
+            response = this.mfrc522.getUid();
+            if (!response.status) {
+                console.log("UID Scan Error");
+                return;
+            }
+            //# If we have the UID, continue
+            const uid = response.data;
+            console.log(
+                "Card read UID: %s %s %s %s",
+                uid[0].toString(16),
+                uid[1].toString(16),
+                uid[2].toString(16),
+                uid[3].toString(16)
+            );
 
-        //# Stop
-        this.mfrc522.stopCrypto();
+            //# Select the scanned card
+            const memoryCapacity = this.mfrc522.selectCard(uid);
+            console.log("Card Memory Capacity: " + memoryCapacity);
+
+            //# This is the default key for authentication
+            const key = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
+
+            //# Authenticate on Block 8 with key and uid
+            if (!this.mfrc522.authenticate(8, key, uid)) {
+                console.log("Authentication Error");
+                return;
+            }
+
+            //# Dump Block 8
+            console.log("Block: 8 Data: " + this.mfrc522.getDataForBlock(8));
+
+            //# Stop
+            this.mfrc522.stopCrypto();
+        }, 500);
 
         return false;
     }

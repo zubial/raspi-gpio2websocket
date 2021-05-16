@@ -37,13 +37,14 @@ switch (args.command) {
 console.debug('Command : ', args.command);
 console.debug('Arguments : ', args);
 if (command !== undefined) {
-    command.run(args).then(function () {
-        console.debug('Finished successfully');
-        process.exit(0);
-    }).catch(function (e) {
-        console.error(e);
-        process.exit(99);
-    });
+    command.runSync();
+    // command.run(args).then(() => {
+    //     console.debug('Finished successfully');
+    //     process.exit(0);
+    // }).catch(e => {
+    //     console.error(e);
+    //     process.exit(99);
+    // });
 }
 else {
     console.error('Command is not implemented !');
