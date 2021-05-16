@@ -41,7 +41,7 @@ export class TestCommand implements ICommand {
             //# Scan for cards
             let response = this.mfrc522.findCard();
             console.log("---------------------");
-            if (!response.status) {
+            if (response.bitSize == 0) {
                 console.log("No Card", response);
                 return;
             }
@@ -50,10 +50,11 @@ export class TestCommand implements ICommand {
             //# Get the UID of the card
             response = this.mfrc522.getUid();
             if (!response.status) {
-                console.log("UID Scan Error");
+                console.log("UID Scan Error", response);
                 return;
             }
             //# If we have the UID, continue
+
             const uid = response.data;
             console.log(
                 "Card read UID: %s %s %s %s",

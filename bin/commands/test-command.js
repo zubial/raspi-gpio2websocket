@@ -66,7 +66,7 @@ var TestCommand = /** @class */ (function () {
             //# Scan for cards
             var response = _this.mfrc522.findCard();
             console.log("---------------------");
-            if (!response.status) {
+            if (response.bitSize == 0) {
                 console.log("No Card", response);
                 return;
             }
@@ -74,7 +74,7 @@ var TestCommand = /** @class */ (function () {
             //# Get the UID of the card
             response = _this.mfrc522.getUid();
             if (!response.status) {
-                console.log("UID Scan Error");
+                console.log("UID Scan Error", response);
                 return;
             }
             //# If we have the UID, continue
